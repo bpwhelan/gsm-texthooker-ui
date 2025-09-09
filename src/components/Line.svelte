@@ -16,6 +16,7 @@
 	import type { LineItem, LineItemEditEvent } from '../types';
 	import { dummyFn, newLineCharacter, updateScroll } from '../util';
 	import Icon from './Icon.svelte';
+	import { getGSMEndpoint } from '../gsm';
 
 	export let line: LineItem;
 	export let index: number;
@@ -104,7 +105,7 @@
 
 	async function toggleCheckbox(id: string) {
 		try {
-			const res = await fetch('/update_checkbox', {
+			const res = await fetch(getGSMEndpoint('/update_checkbox'), {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ id }),
@@ -126,7 +127,7 @@
 			Audio: '/play-audio',
 		};
 		let endpoint = endpoints[action] ?? '';
-		fetch(endpoint, {
+		fetch(getGSMEndpoint(endpoint), {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ id }),
@@ -145,7 +146,7 @@
 					} else {
 						line.text = line.text + '\n' + data['TL'];
 					}
-					$lineData$[index] = line;
+					// $lineData$[index] = line;
 				}
 				console.log(`${action} action completed for event ID: ${id}`, data);
 			})

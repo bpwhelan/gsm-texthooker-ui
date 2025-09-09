@@ -73,6 +73,7 @@
 	import SocketConnector from './SocketConnector.svelte';
 	import Spinner from './Spinner.svelte';
 	import Stats from './Stats.svelte';
+	import { getGSMEndpoint } from '../gsm';
 
 	let isSmFactor = false;
 	let settingsComponent: Settings;
@@ -274,7 +275,7 @@
 	export function startIdPolling() {
 		setInterval(async () => {
 			try {
-				const response = await fetch('/get_ids');
+				const response = await fetch(getGSMEndpoint('/get_ids'));
 				if (!response.ok) {
 					throw new Error(`HTTP error! Status: ${response.status}`);
 				}
@@ -644,7 +645,7 @@
 				ids = ids.slice(-Number(numberOfLinesToTranslate));
 			}
 			
-			const response = await fetch('/translate-multiple', {
+			const response = await fetch(getGSMEndpoint('/translate-multiple'), {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

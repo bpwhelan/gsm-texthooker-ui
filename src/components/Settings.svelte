@@ -87,6 +87,7 @@
 	import Icon from './Icon.svelte';
 	import Presets from './Presets.svelte';
 	import ReplacementSettings from './ReplacementSettings.svelte';
+	import { getGSMEndpoint } from '../gsm';
 
 	export let selectedLineIds: string[];
 	export let settingsOpen: boolean;
@@ -144,6 +145,12 @@
 	$: updateExternalClipboardMonitor($enableExternalClipboardMonitor$);
 
 	$: applyCustomCSS(document, $customCSS$);
+
+	$:	getWebsocketPort().then((port) => {
+			if (port && $websocketUrl$ !== `ws://localhost:${port}`) {
+				$websocketUrl$ = `ws://localhost:${port}`;
+			}
+		});
 
 	function handleSecondaryWebsocketChange(event: Event) {
 		const target = event.target as HTMLInputElement;
@@ -654,6 +661,20 @@
 			fileReader.addEventListener('error', () => reject(new Error('Failed to read File')));
 			fileReader.readAsText(file, 'utf-8');
 		});
+	}
+
+	async function getWebsocketPort() {
+		try {
+			const response = await fetch(getGSMEndpoint('/get_websocket_port'));
+			if (!response.ok) {
+				throw new Error('Failed to fetch websocket port');
+			}
+			const data = await response.json();
+			return data.port;
+		} catch (error) {
+			console.error('Error fetching websocket port:', error);
+			return null;
+		}
 	}
 </script>
 
