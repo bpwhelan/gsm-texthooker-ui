@@ -40,7 +40,7 @@
 		if (isLast) {
 			updateScroll(
 				pipWindow || window,
-				paragraph.parentElement,
+				paragraph.parentElement.parentElement,
 				$reverseLineOrder$,
 				isVerticalDisplay,
 				$enableLineAnimation$ ? 'smooth' : 'auto',

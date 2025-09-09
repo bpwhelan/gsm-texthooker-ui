@@ -2,6 +2,7 @@
 	import {
 		mdiArrowULeftTop,
 		mdiCancel,
+		mdiChartBar,
 		mdiCog,
 		mdiDelete,
 		mdiDeleteForever,
@@ -742,6 +743,19 @@
 			/>
 		</div>
 	{/if}
+	<div
+		role="button"
+		class="mr-1 hover:text-primary sm:mr-2"
+		title="Open Statistics Page"
+	>
+		<Icon
+		path={mdiChartBar}
+		width={iconSize}
+		height={iconSize}
+		on:click={() => window.open('/stats', '_blank')}
+		/>
+	</div>
+	
 	<Icon
 		class="cursor-pointer mr-1 hover:text-primary md:mr-2"
 		path={mdiCog}
