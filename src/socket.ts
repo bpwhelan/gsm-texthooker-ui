@@ -113,6 +113,8 @@ export class SocketConnection {
 		}
 		console.log(event.data);
 
-		newLine$.next([line, LineType.SOCKET, JSON.parse(event.data)?.data.id || '']);
+		const id = JSON.parse(event.data)?.data?.id || '';
+
+		newLine$.next([line, LineType.SOCKET, id]);
 	}
 }
