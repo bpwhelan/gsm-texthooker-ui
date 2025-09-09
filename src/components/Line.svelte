@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { mdiTrophy } from '@mdi/js';
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import {
@@ -10,9 +11,11 @@
 		newLine$,
 		lineData$,
 		autoTranslateLines$,
+		milestoneLines$,
 	} from '../stores/stores';
-	import { type LineItem, type LineItemEditEvent, LineType } from '../types';
+	import type { LineItem, LineItemEditEvent } from '../types';
 	import { dummyFn, newLineCharacter, updateScroll } from '../util';
+	import Icon from './Icon.svelte';
 
 	export let line: LineItem;
 	export let index: number;
@@ -213,6 +216,22 @@
 	</div>
 {/key}
 {@html newLineCharacter}
+{#if $milestoneLines$.has(line.id)}
+	<div
+		class="flex justify-center text-xs my-2 py-2 border-primary border-dashed milestone"
+		class:border-x-2={$displayVertical$}
+		class:border-y-2={!$displayVertical$}
+		class:py-4={!isVerticalDisplay}
+		class:px-2={!isVerticalDisplay}
+		class:py-2={isVerticalDisplay}
+		class:px-4={isVerticalDisplay}
+	>
+		<div class="flex items-center">
+			<Icon class={$displayVertical$ ? '' : 'mr-2'} path={mdiTrophy}></Icon>
+			<span class:mt-2={$displayVertical$}>{$milestoneLines$.get(line.id)}</span>
+		</div>
+	</div>
+{/if}
 
 <style>
 	p:focus-visible {
