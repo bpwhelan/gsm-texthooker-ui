@@ -130,7 +130,7 @@
 		fetch(getGSMEndpoint(endpoint), {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id }),
+			body: JSON.stringify({ id, text: line.text }),
 		})
 			.then((response) => {
 				if (!response.ok) {
