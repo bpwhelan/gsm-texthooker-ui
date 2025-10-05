@@ -11,6 +11,7 @@
 		newLine$,
 		lineData$,
 		autoTranslateLines$,
+		blurAutoTranslatedLines$,
 		milestoneLines$,
 	} from '../stores/stores';
 	import type { LineItem, LineItemEditEvent } from '../types';
@@ -49,9 +50,9 @@
 				isVerticalDisplay,
 				$enableLineAnimation$ ? 'smooth' : 'auto',
 			);
-		}
-		if ($lineIDs$ && $lineIDs$.includes(line.id) && $autoTranslateLines$) {
-			buttonClick(line.id, 'TL');
+			if ($lineIDs$ && $lineIDs$.includes(line.id) && $autoTranslateLines$) {
+				buttonClick(line.id, 'TL', $blurAutoTranslatedLines$);
+			}
 		}
 	});
 
@@ -140,13 +141,20 @@
 			})
 			.then((data) => {
 				if (action === 'TL') {
-					// newLine$.next([data['TL'], LineType.TL, id]);
+					line.translation = data['TL'];
 					if (blurTranslate) {
-						
+						line.blurTranslation = true;
 					} else {
-						line.text = line.text + '\n' + data['TL'];
+						line.blurTranslation = false;
 					}
-					// $lineData$[index] = line;
+					$lineData$[line.index] = line;
+					updateScroll(
+						pipWindow || window,
+						paragraph.parentElement.parentElement,
+						$reverseLineOrder$,
+						isVerticalDisplay,
+						$enableLineAnimation$ ? 'smooth' : 'auto',
+					);
 				}
 				console.log(`${action} action completed for event ID: ${id}`, data);
 			})
@@ -185,6 +193,28 @@
 			in:fly={{ x: isVerticalDisplay ? 100 : -100, duration: $enableLineAnimation$ ? 250 : 0 }}
 		>
 			{line.text}
+			{#if line.translation}
+				<br />
+				<p
+					class:blur-translation={line.blurTranslation}
+					style="color: #888; padding-bottom: 16px; padding-top: 16px; width: 100%; {line.blurTranslation
+						? 'filter: blur(8px); transition: filter 0.2s;'
+						: ''}"
+					on:mouseenter={line.blurTranslation
+						? function () {
+								this.style.filter = 'blur(0px)';
+								this.style.transition = 'filter 0.3s';
+							}
+						: undefined}
+					on:mouseleave={line.blurTranslation
+						? function () {
+								this.style.filter = 'blur(8px)';
+							}
+						: undefined}
+				>
+					<i>{line.translation}</i>
+				</p>
+			{/if}
 		</p>
 		{#if $lineIDs$ && $lineIDs$.includes(line.id)}
 			<div class="textline-buttons unselectable">

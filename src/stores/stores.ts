@@ -64,6 +64,8 @@ export const defaultSettings: Settings = {
 	continuousReconnect$: true,
 	showConnectionErrors$: false,
 	customCSS$: '',
+	autoTranslateLines$: false,
+	blurAutoTranslatedLines$: false,
 };
 
 export const theme$ = writableStringSubject()('bannou-texthooker-theme', defaultSettings.theme$);
@@ -284,9 +286,9 @@ export const showSpinner$ = writable<boolean>(false);
 
 export const enabledReplacements$ = writable<ReplacementItem[]>([]);
 
-export const autoTranslateLines$ = writable<boolean>(false);
+export const autoTranslateLines$ = writableBooleanSubject()('bannou-texthooker-autoTranslateLines', false);
 
-export const blurAutoTranslatedLines$ = writable<boolean>(false);
+export const blurAutoTranslatedLines$ = writableBooleanSubject()('bannou-texthooker-blurAutoTranslatedLines', false);
 
 export const lastPipHeight$ = writableNumberSubject()('bannou-texthooker-lastPipHeight', 0);
 
@@ -365,4 +367,6 @@ export async function resetAllData() {
 	continuousReconnect$.next(defaultSettings.continuousReconnect$);
 	showConnectionErrors$.next(defaultSettings.showConnectionErrors$);
 	customCSS$.next(defaultSettings.customCSS$);
+	autoTranslateLines$.next(defaultSettings.autoTranslateLines$);
+	blurAutoTranslatedLines$.next(defaultSettings.blurAutoTranslatedLines$);
 }
