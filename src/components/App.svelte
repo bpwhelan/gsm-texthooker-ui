@@ -753,7 +753,7 @@
 		path={mdiChartBar}
 		width={iconSize}
 		height={iconSize}
-		on:click={() => window.open('/stats', '_blank')}
+		on:click={() => window.open('/overview', '_blank')}
 		/>
 	</div>
 	
