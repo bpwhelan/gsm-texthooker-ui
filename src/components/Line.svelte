@@ -51,7 +51,7 @@
 				$enableLineAnimation$ ? 'smooth' : 'auto',
 			);
 			if ($lineIDs$ && $lineIDs$.includes(line.id) && $autoTranslateLines$) {
-				buttonClick(line.id, 'TL', $blurAutoTranslatedLines$);
+				buttonClick(line.id, 'TL', $blurAutoTranslatedLines$, isLast);
 			}
 		}
 	});
@@ -119,7 +119,7 @@
 		}
 	}
 
-	function buttonClick(id: string, action: string, blurTranslate: boolean = false) {
+	function buttonClick(id: string, action: string, blurTranslate: boolean = false, isLast: boolean = false) {
 		console.log(id);
 		// const endpoint = action === 'Screenshot' ? '/get-screenshot' : '/play-audio';
 		const endpoints: Record<string, string> = {
@@ -147,14 +147,19 @@
 					} else {
 						line.blurTranslation = false;
 					}
+					if (!line.text.endsWith('\n')) {
+						line.text += '\n';
+					}
 					$lineData$[line.index] = line;
-					updateScroll(
-						pipWindow || window,
-						paragraph.parentElement.parentElement,
-						$reverseLineOrder$,
-						isVerticalDisplay,
-						$enableLineAnimation$ ? 'smooth' : 'auto',
-					);
+					if (isLast) {
+						updateScroll(
+							pipWindow || window,
+							paragraph.parentElement.parentElement,
+							$reverseLineOrder$,
+							isVerticalDisplay,
+							$enableLineAnimation$ ? 'smooth' : 'auto',
+						);
+					}
 				}
 				console.log(`${action} action completed for event ID: ${id}`, data);
 			})
@@ -194,7 +199,6 @@
 		>
 			{line.text}
 			{#if line.translation}
-				<br />
 				<p
 					class:blur-translation={line.blurTranslation}
 					style="color: #888; padding-bottom: 16px; padding-top: 16px; width: 100%; {line.blurTranslation
