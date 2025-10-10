@@ -167,6 +167,12 @@
 				console.error(`Error performing ${action} action for event ID: ${id}`, error);
 			});
 	}
+
+	function openJitenMoe() {
+		const encodedText = encodeURIComponent(line.text);
+		const url = `https://jiten.moe/parse?text=${encodedText}`;
+		window.open(url, '_blank');
+	}
 </script>
 
 {#key line.text}
@@ -245,6 +251,14 @@
 					tabindex="-1"
 				>
 					🌐
+				</button>
+				<button
+					on:click={openJitenMoe}
+					title="Parse on Jiten.moe"
+					style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
+					tabindex="-1"
+				>
+					🔎
 				</button>
 			</div>
 		{/if}
