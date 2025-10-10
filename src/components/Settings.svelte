@@ -138,7 +138,7 @@
 
 	$: websocketUrl = $websocketUrl$;
 
-	$: secondaryWebsocketUrl = $secondaryWebsocketUrl$;
+	$: secondaryWebsocketUrl = "";
 
 	$: document.body.dataset.theme = $theme$;
 
@@ -146,9 +146,14 @@
 
 	$: applyCustomCSS(document, $customCSS$);
 
-	$:	getWebsocketPort().then((port) => {
-			if (port && $websocketUrl$ !== `ws://localhost:${port}`) {
-				$websocketUrl$ = `ws://localhost:${port}`;
+	$: getWebsocketPort().then((port) => {
+		// If Protocol is https, do not replace, let them do whatever
+		if (window.location.protocol === 'https:') {
+			return;
+		}
+		const hostname = window.location.hostname;
+			if (port && $websocketUrl$ !== `ws://${hostname}:${port}`) {
+				$websocketUrl$ = `ws://${hostname}:${port}`;
 			}
 		});
 
@@ -829,12 +834,12 @@
 			bind:value={websocketUrl}
 			on:change={() => ($websocketUrl$ = websocketUrl)}
 		/>
-		<span class="label-text col-span-2">Secondary Websocket</span>
+		<!-- <span class="label-text col-span-2">Secondary Websocket</span>
 		<input
 			class="input input-bordered h-8 col-span-2"
 			bind:value={secondaryWebsocketUrl}
 			on:change={handleSecondaryWebsocketChange}
-		/>
+		/> -->
 		<span class="label-text col-span-2">Font Size</span>
 		<input
 			type="number"
