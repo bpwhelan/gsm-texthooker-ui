@@ -223,6 +223,7 @@
 		{#if $lineIDs$ && $lineIDs$.includes(line.id)}
 			<div class="textline-buttons unselectable">
 				<button
+					class="hide-on-mobile"
 					on:click={() => buttonClick(line.id, 'Screenshot')}
 					title="Screenshot"
 					style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
@@ -231,6 +232,7 @@
 					&#x1F4F7;
 				</button>
 				<button
+					class="hide-on-mobile"
 					on:click={() => buttonClick(line.id, 'Audio')}
 					title="Audio"
 					style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
@@ -302,6 +304,13 @@
 		display: flex;
 		gap: 10px;
 	}
+
+/* Hide only buttons with .hide-on-mobile on mobile devices */
+@media (max-width: 800px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
 
 	.textline2 {
 		margin: 15px 0;
