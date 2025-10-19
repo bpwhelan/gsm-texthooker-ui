@@ -125,7 +125,7 @@ export enum LineType {
 	EXTERNAL = 'external',
 	EDIT = 'edit',
 	UNDO = 'undo',
-	RESETCHECKBOXES = 'resetcheckboxes',
+	RESETCHECKBOXES = 'reset_checkboxes',
 	TL = 'tl',
 }
 

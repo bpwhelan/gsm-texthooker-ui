@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { mdiTrophy } from '@mdi/js';
+	import { mdiTrophy, mdiClockOutline, mdiCheck } from '@mdi/js';
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import {
@@ -13,6 +13,7 @@
 		autoTranslateLines$,
 		blurAutoTranslatedLines$,
 		milestoneLines$,
+		timedOutIDs$,
 	} from '../stores/stores';
 	import type { LineItem, LineItemEditEvent } from '../types';
 	import { dummyFn, newLineCharacter, updateScroll } from '../util';
@@ -120,7 +121,6 @@
 	}
 
 	function buttonClick(id: string, action: string, blurTranslate: boolean = false, isLast: boolean = false) {
-		console.log(id);
 		// const endpoint = action === 'Screenshot' ? '/get-screenshot' : '/play-audio';
 		const endpoints: Record<string, string> = {
 			TL: '/translate-line',
@@ -161,7 +161,6 @@
 						);
 					}
 				}
-				console.log(`${action} action completed for event ID: ${id}`, data);
 			})
 			.catch((error) => {
 				console.error(`Error performing ${action} action for event ID: ${id}`, error);
@@ -249,6 +248,14 @@
 					🌐
 				</button>
 			</div>
+		{:else if $timedOutIDs$.includes(line.id)}
+			<div class="line-indicator unselectable" title="Line is outside replay buffer" tabindex="-1" style="color: #666;">
+				<Icon path={mdiClockOutline} width="32px" height="32px" />
+			</div>
+		{:else}
+			<!-- <div class="line-indicator unselectable" title="Line from before GSM was started" tabindex="-1" style="color: #888;">
+				<Icon path={mdiCheck} width="32px" height="32px" />
+			</div> -->
 		{/if}
 	</div>
 {/key}
@@ -326,5 +333,21 @@
 		-webkit-user-select: none !important;
 		-moz-user-select: none !important;
 		-ms-user-select: none !important;
+	}
+
+	.line-indicator {
+		display: flex;
+		align-items: center;
+		opacity: 0.6;
+		transition: opacity 0.2s ease;
+		margin-left: 8px;
+		/* cursor: help; */
+		margin-left: auto;
+		user-select: none; /* Make text unselectable */
+		gap: 10px;
+	}
+
+	.line-indicator:hover {
+		opacity: 1;
 	}
 </style>

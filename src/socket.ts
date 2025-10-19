@@ -104,7 +104,7 @@ export class SocketConnection {
 
 
 		try {
-			if (JSON.parse(event.data)?.event === "reset_checkboxes") {
+			if (JSON.parse(event.data)?.event === LineType.RESETCHECKBOXES) {
 				newLine$.next(['', LineType.RESETCHECKBOXES, '']);
 				return;
 			}
@@ -112,8 +112,6 @@ export class SocketConnection {
 		} catch (_) {
 			// no-op
 		}
-		console.log(event.data);
-
 		const id = JSON.parse(event.data)?.data?.id || '';
 
 		newLine$.next([line, LineType.SOCKET, id]);
