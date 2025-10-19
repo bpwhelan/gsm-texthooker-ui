@@ -170,15 +170,14 @@
 
 {#key line.text}
 	<div class="textline2">
-		{#if $lineIDs$ && $lineIDs$.includes(line.id)}
-			<input
-				type="checkbox"
-				class="multi-line-checkbox"
-				id="multi-line-checkbox-{line.id}"
-				aria-label={line.id}
-				on:change={() => toggleCheckbox(line.id)}
-			/>
-		{/if}
+		<input
+			type="checkbox"
+			class="multi-line-checkbox"
+			class:invisible={!($lineIDs$ && $lineIDs$.includes(line.id))}
+			id="multi-line-checkbox-{line.id}"
+			aria-label={line.id}
+			on:change={() => toggleCheckbox(line.id)}
+		/>
 		<p
 			class="my-2 cursor-pointer border-2"
 			class:py-4={!isVerticalDisplay}
@@ -219,44 +218,45 @@
 				</p>
 			{/if}
 		</p>
-		{#if $lineIDs$ && $lineIDs$.includes(line.id)}
-			<div class="textline-buttons unselectable">
-				<button
-					class="hide-on-mobile"
-					on:click={() => buttonClick(line.id, 'Screenshot')}
-					title="Screenshot"
-					style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
-					tabindex="-1"
-				>
-					&#x1F4F7;
-				</button>
-				<button
-					class="hide-on-mobile"
-					on:click={() => buttonClick(line.id, 'Audio')}
-					title="Audio"
-					style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
-					tabindex="-1"
-				>
-					&#x1F50A;
-				</button>
-				<button
-					on:click={() => buttonClick(line.id, 'TL')}
-					title="Translate"
-					style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
-					tabindex="-1"
-				>
-					🌐
-				</button>
-			</div>
-		{:else if $timedOutIDs$.includes(line.id)}
-			<div class="line-indicator unselectable" title="Line is outside replay buffer" tabindex="-1" style="color: #666;">
-				<Icon path={mdiClockOutline} width="32px" height="32px" />
-			</div>
-		{:else}
-			<!-- <div class="line-indicator unselectable" title="Line from before GSM was started" tabindex="-1" style="color: #888;">
-				<Icon path={mdiCheck} width="32px" height="32px" />
-			</div> -->
-		{/if}
+		<div class="line-actions-container">
+			{#if $lineIDs$ && $lineIDs$.includes(line.id)}
+				<div class="textline-buttons unselectable">
+					<button
+						class="hide-on-mobile"
+						on:click={() => buttonClick(line.id, 'Screenshot')}
+						title="Screenshot"
+						style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
+						tabindex="-1"
+					>
+						&#x1F4F7;
+					</button>
+					<button
+						class="hide-on-mobile"
+						on:click={() => buttonClick(line.id, 'Audio')}
+						title="Audio"
+						style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
+						tabindex="-1"
+					>
+						&#x1F50A;
+					</button>
+					<button
+						on:click={() => buttonClick(line.id, 'TL')}
+						title="Translate"
+						style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
+						tabindex="-1"
+					>
+						🌐
+					</button>
+				</div>
+			{:else if $timedOutIDs$.includes(line.id)}
+				<div class="line-indicator unselectable" title="Line is outside replay buffer" tabindex="-1" style="color: #666;">
+					<Icon path={mdiClockOutline} width="32px" height="32px" />
+				</div>
+			{:else}
+				<!-- Empty div to maintain consistent spacing -->
+				<div class="line-indicator-placeholder"></div>
+			{/if}
+		</div>
 	</div>
 {/key}
 {@html newLineCharacter}
@@ -287,6 +287,10 @@
 		margin-right: 10px;
 		background-color: #00ffff !important; /* Cyan/Electric Blue */
 		border: 4px solid #00ffff; /* Keep the border the same color */
+	}
+
+	.multi-line-checkbox.invisible {
+		visibility: hidden;
 	}
 
 	.textline-buttons > button {
@@ -349,5 +353,18 @@
 
 	.line-indicator:hover {
 		opacity: 1;
+	}
+
+	.line-actions-container {
+		margin-left: auto;
+		min-width: 128px; /* Reserve minimum space for icons */
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	.line-indicator-placeholder {
+		width: 32px;
+		height: 32px;
 	}
 </style>
