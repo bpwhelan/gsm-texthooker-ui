@@ -500,7 +500,7 @@
 		const wasChange = value !== $maxLines$;
 
 		if (!value || value < 0) {
-			$maxLines$ = 0;
+			$maxLines$ = 1000;
 		} else {
 			$maxLines$ = value;
 		}

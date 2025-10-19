@@ -37,6 +37,7 @@
 		lastPipWidth$,
 		lineData$,
 		lineIDs$,
+		timedOutIDs$,
 		maxLines$,
 		maxPipLines$,
 		mergeEqualLineStarts$,
@@ -104,7 +105,7 @@
 	);
 
 	const handleLine$ = newLine$.pipe(
-		filter(([_, lineType, _1]) => {
+		filter(([value, lineType, _1]) => {
 			const isResetCheckboxes = lineType === LineType.RESETCHECKBOXES;
 			const isPaste = lineType === LineType.PASTE;
 			const hasNoUserInteraction = !isPaste || (!$notesOpen$ && !$dialogOpen$ && !settingsOpen && !lineInEdit);
@@ -279,7 +280,9 @@
 				if (!response.ok) {
 					throw new Error(`HTTP error! Status: ${response.status}`);
 				}
-				$lineIDs$ = await response.json();
+				const resp = await response.json();
+				$lineIDs$ = resp.ids;
+				$timedOutIDs$ = resp.timed_out_ids;
 			} catch (error) {
 				console.error('Failed to fetch ids:', error);
 			}

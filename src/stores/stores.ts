@@ -28,7 +28,7 @@ export const defaultSettings: Settings = {
 	characterMilestone$: 0,
 	onlineFont$: OnlineFont.OFF,
 	preventLastDuplicate$: 0,
-	maxLines$: 0,
+	maxLines$: 1000,
 	maxPipLines$: 1,
 	afkTimer$: 0,
 	adjustTimerOnAfk$: false,
@@ -98,6 +98,11 @@ export const preventLastDuplicate$ = writableNumberSubject()(
 );
 
 export const maxLines$ = writableNumberSubject()('bannou-texthooker-maxLines', defaultSettings.maxLines$);
+
+if (maxLines$.getValue() == 0) {
+	maxLines$.next(1000);
+}
+
 
 export const maxPipLines$ = writableNumberSubject()('bannou-texthooker-maxPipLines', defaultSettings.maxPipLines$);
 
@@ -263,6 +268,8 @@ export const lastSettingPreset$ = writableStringSubject()('bannou-texthooker-las
 export const lineData$ = writeableArraySubject<LineItem>()('bannou-texthooker-lineData', [], persistLines$);
 
 export const lineIDs$ = writeableArraySubject<string>()('bannou-texthooker-lineIDs', []);
+
+export const timedOutIDs$ = writeableArraySubject<string>()('bannou-texthooker-timedOutIDs', []);
 
 export const milestoneLines$ = writable<Map<string, string>>(new Map<string, string>());
 
