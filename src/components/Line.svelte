@@ -249,9 +249,22 @@
 					</button>
 				</div>
 			{:else if $timedOutIDs$.includes(line.id)}
-				<div class="line-indicator unselectable" title="Line is outside replay buffer" tabindex="-1" style="color: #666;">
+				<div
+					class="line-indicator unselectable"
+					title="Line is outside replay buffer"
+					tabindex="-1"
+					style="color: #666;"
+				>
 					<Icon path={mdiClockOutline} width="32px" height="32px" />
 				</div>
+				<button
+					on:click={() => buttonClick(line.id, 'TL')}
+					title="Translate"
+					style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; margin-left: 5px;"
+					tabindex="-1"
+				>
+					🌐
+				</button>
 			{:else}
 				<!-- Empty div to maintain consistent spacing -->
 				<div class="line-indicator-placeholder"></div>
@@ -316,12 +329,12 @@
 		gap: 10px;
 	}
 
-/* Hide only buttons with .hide-on-mobile on mobile devices */
-@media (max-width: 800px) {
-  .hide-on-mobile {
-    display: none !important;
-  }
-}
+	/* Hide only buttons with .hide-on-mobile on mobile devices */
+	@media (max-width: 800px) {
+		.hide-on-mobile {
+			display: none !important;
+		}
+	}
 
 	.textline2 {
 		margin: 15px 0;
