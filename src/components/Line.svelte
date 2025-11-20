@@ -14,6 +14,11 @@
 		blurAutoTranslatedLines$,
 		milestoneLines$,
 		timedOutIDs$,
+		unblurTLTimer$,
+		showGSMCheckboxes$,
+		showScreenshotButton$,
+		showAudioButton$,
+		showTranslateButton$,
 	} from '../stores/stores';
 	import type { LineItem, LineItemEditEvent } from '../types';
 	import { dummyFn, newLineCharacter, updateScroll } from '../util';
@@ -147,6 +152,12 @@
 					} else {
 						line.blurTranslation = false;
 					}
+					if ($unblurTLTimer$ > 0 && line.blurTranslation) {
+						setTimeout(() => {
+							line.blurTranslation = false;
+						}, $unblurTLTimer$ * 1000);
+					}
+
 					if (!line.text.endsWith('\n')) {
 						line.text += '\n';
 					}
@@ -170,14 +181,16 @@
 
 {#key line.text}
 	<div class="textline2">
-		<input
-			type="checkbox"
-			class="multi-line-checkbox"
-			class:invisible={!($lineIDs$ && $lineIDs$.includes(line.id))}
-			id="multi-line-checkbox-{line.id}"
-			aria-label={line.id}
-			on:change={() => toggleCheckbox(line.id)}
-		/>
+		{#if $showGSMCheckboxes$}
+			<input
+				type="checkbox"
+				class="multi-line-checkbox"
+				class:invisible={!($lineIDs$ && $lineIDs$.includes(line.id))}
+				id="multi-line-checkbox-{line.id}"
+				aria-label={line.id}
+				on:change={() => toggleCheckbox(line.id)}
+			/>
+		{/if}
 		<p
 			class="my-2 cursor-pointer border-2"
 			class:py-4={!isVerticalDisplay}
@@ -221,32 +234,38 @@
 		<div class="line-actions-container">
 			{#if $lineIDs$ && $lineIDs$.includes(line.id)}
 				<div class="textline-buttons unselectable">
-					<button
-						class="hide-on-mobile"
-						on:click={() => buttonClick(line.id, 'Screenshot')}
-						title="Screenshot"
-						style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
-						tabindex="-1"
-					>
-						&#x1F4F7;
-					</button>
-					<button
-						class="hide-on-mobile"
-						on:click={() => buttonClick(line.id, 'Audio')}
-						title="Audio"
-						style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
-						tabindex="-1"
-					>
-						&#x1F50A;
-					</button>
-					<button
-						on:click={() => buttonClick(line.id, 'TL')}
-						title="Translate"
-						style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
-						tabindex="-1"
-					>
-						🌐
-					</button>
+					{#if $showScreenshotButton$}
+						<button
+							class="hide-on-mobile"
+							on:click={() => buttonClick(line.id, 'Screenshot')}
+							title="Screenshot"
+							style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
+							tabindex="-1"
+						>
+							&#x1F4F7;
+						</button>
+					{/if}
+					{#if $showAudioButton$}
+						<button
+							class="hide-on-mobile"
+							on:click={() => buttonClick(line.id, 'Audio')}
+							title="Audio"
+							style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
+							tabindex="-1"
+						>
+							&#x1F50A;
+						</button>
+					{/if}
+					{#if $showTranslateButton$}
+						<button
+							on:click={() => buttonClick(line.id, 'TL')}
+							title="Translate"
+							style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
+							tabindex="-1"
+						>
+							🌐
+						</button>
+					{/if}
 				</div>
 			{:else if $timedOutIDs$.includes(line.id)}
 				<div
@@ -257,14 +276,16 @@
 				>
 					<Icon path={mdiClockOutline} width="32px" height="32px" />
 				</div>
-				<button
-					on:click={() => buttonClick(line.id, 'TL')}
-					title="Translate"
-					style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; margin-left: 5px;"
-					tabindex="-1"
-				>
-					🌐
-				</button>
+				{#if $showTranslateButton$}
+					<button
+						on:click={() => buttonClick(line.id, 'TL')}
+						title="Translate"
+						style="background-color: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; margin-left: 5px;"
+						tabindex="-1"
+					>
+						🌐
+					</button>
+				{/if}
 			{:else}
 				<!-- Empty div to maintain consistent spacing -->
 				<div class="line-indicator-placeholder"></div>

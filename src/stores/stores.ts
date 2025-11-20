@@ -66,6 +66,11 @@ export const defaultSettings: Settings = {
 	customCSS$: '',
 	autoTranslateLines$: false,
 	blurAutoTranslatedLines$: false,
+	unblurTLTimer$: 0,
+	showScreenshotButton$: false,
+	showTranslateButton$: true,
+	showAudioButton$: true,
+	showGSMCheckboxes$: true,
 };
 
 export const theme$ = writableStringSubject()('bannou-texthooker-theme', defaultSettings.theme$);
@@ -297,6 +302,16 @@ export const autoTranslateLines$ = writableBooleanSubject()('bannou-texthooker-a
 
 export const blurAutoTranslatedLines$ = writableBooleanSubject()('bannou-texthooker-blurAutoTranslatedLines', false);
 
+export const unblurTLTimer$ = writableNumberSubject()('bannou-texthooker-unblurTLTimer', 0);
+
+export const showScreenshotButton$ = writableBooleanSubject()('bannou-texthooker-showScreenshotButton', false);
+
+export const showTranslateButton$ = writableBooleanSubject()('bannou-texthooker-showTranslateButton', true);
+
+export const showAudioButton$ = writableBooleanSubject()('bannou-texthooker-showAudioButton', true);
+
+export const showGSMCheckboxes$ = writableBooleanSubject()('bannou-texthooker-showGSMCheckboxes', true);
+
 export const lastPipHeight$ = writableNumberSubject()('bannou-texthooker-lastPipHeight', 0);
 
 export const lastPipWidth$ = writableNumberSubject()('bannou-texthooker-lastPipWidth', 0);
@@ -376,4 +391,9 @@ export async function resetAllData() {
 	customCSS$.next(defaultSettings.customCSS$);
 	autoTranslateLines$.next(defaultSettings.autoTranslateLines$);
 	blurAutoTranslatedLines$.next(defaultSettings.blurAutoTranslatedLines$);
+	unblurTLTimer$.next(defaultSettings.unblurTLTimer$);
+	showScreenshotButton$.next(defaultSettings.showScreenshotButton$);
+	showTranslateButton$.next(defaultSettings.showTranslateButton$);
+	showAudioButton$.next(defaultSettings.showAudioButton$);
+	showGSMCheckboxes$.next(defaultSettings.showGSMCheckboxes$);
 }

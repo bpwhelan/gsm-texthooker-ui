@@ -87,6 +87,11 @@ export interface Settings {
 	customCSS$: string;
 	autoTranslateLines$: boolean;
 	blurAutoTranslatedLines$: boolean;
+	unblurTLTimer$: number;
+	showScreenshotButton$: boolean;
+	showTranslateButton$: boolean;
+	showAudioButton$: boolean;
+	showGSMCheckboxes$: boolean;
 }
 
 export interface ExportedData {

@@ -2,12 +2,14 @@
 	import {
 		mdiClose,
 		mdiDatabaseSync,
+		mdiPickaxe,
 		mdiDelete,
 		mdiHelpCircle,
 		mdiTimerCancel,
 		mdiTimerEdit,
 		mdiWeatherNight,
 		mdiWhiteBalanceSunny,
+		mdiTranslate
 	} from '@mdi/js';
 	import { createEventDispatcher, tick } from 'svelte';
 	import {
@@ -71,6 +73,11 @@
 		windowTitle$,
 		autoTranslateLines$,
 		blurAutoTranslatedLines$,
+		showScreenshotButton$,
+		showTranslateButton$,
+		showAudioButton$,
+		showGSMCheckboxes$,
+		unblurTLTimer$,
 	} from '../stores/stores';
 	import {
 		LineType,
@@ -1026,10 +1033,54 @@
 		/>
 		<span class="label-text">Show Connection Errors</span>
 		<input type="checkbox" class="checkbox checkbox-primary ml-2" bind:checked={$showConnectionErrors$} />
-		<span class="label-text">Auto Translate Lines:</span>
-		<input type="checkbox" class="checkbox checkbox-primary ml-2" bind:checked={$autoTranslateLines$} />
-		<span class="label-text">Blur Auto Translated Lines:</span>
-		<input type="checkbox" class="checkbox checkbox-primary ml-2" bind:checked={$blurAutoTranslatedLines$} />
+
+		<div class="col-span-4 flex items-center gap-2 mt-6 mb-2">
+			<Icon path={mdiPickaxe} class="text-primary w-6 h-6" />
+			<h2 class="text-lg font-bold tracking-wide">GSM Specific Settings</h2>
+		</div>
+		<div class="col-span-4 mb-4">
+			<div class="h-1 w-full bg-gradient-to-r from-primary to-secondary rounded"></div>
+		</div>
+
+		<!-- Auto Translate Subsection -->
+		<div class="col-span-4 mt-2 mb-1 flex items-center gap-2">
+			<Icon path={mdiTranslate} class="text-secondary w-5 h-5" />
+			<h3 class="font-semibold text-base tracking-wide">Auto Translate</h3>
+		</div>
+		<div class="col-span-4 grid grid-cols-4 gap-x-2 gap-y-1 mb-2">
+			<span class="label-text col-span-2">Auto Translate Lines:</span>
+			<input type="checkbox" class="checkbox checkbox-primary ml-2 col-span-2" bind:checked={$autoTranslateLines$} />
+			<span class="label-text col-span-2">Blur Auto Translated Lines:</span>
+			<input type="checkbox" class="checkbox checkbox-primary ml-2 col-span-2" bind:checked={$blurAutoTranslatedLines$} />
+			<span class="label-text col-span-2">Unblur Translation Timer (s):</span>
+			<input
+				type="number"
+				class="input input-bordered h-8 col-span-2 ml-2"
+				min="0"
+				bind:value={$unblurTLTimer$}
+				on:blur={() => {
+					if ($unblurTLTimer$ === null || $unblurTLTimer$ < 0) {
+						$unblurTLTimer$ = 0;
+					}
+				}}
+			/>
+		</div>
+
+		<!-- UI Customizability Subsection -->
+		<div class="col-span-4 mt-2 mb-1 flex items-center gap-2">
+			<Icon path={mdiWhiteBalanceSunny} class="text-accent w-5 h-5" />
+			<h3 class="font-semibold text-base tracking-wide">UI Customizability</h3>
+		</div>
+		<div class="col-span-4 grid grid-cols-4 gap-x-2 gap-y-1 mb-2">
+			<span class="label-text col-span-2">Show Screenshot Button</span>
+			<input type="checkbox" class="checkbox checkbox-primary ml-2 col-span-2" bind:checked={$showScreenshotButton$} />
+			<span class="label-text col-span-2">Show Translate Button</span>
+			<input type="checkbox" class="checkbox checkbox-primary ml-2 col-span-2" bind:checked={$showTranslateButton$} />
+			<span class="label-text col-span-2">Show Audio Button</span>
+			<input type="checkbox" class="checkbox checkbox-primary ml-2 col-span-2" bind:checked={$showAudioButton$} />
+			<span class="label-text col-span-2">Show Checkboxes</span>
+			<input type="checkbox" class="checkbox checkbox-primary ml-2 col-span-2" bind:checked={$showGSMCheckboxes$} />
+		</div>
 		<span class="label-text" style="grid-column: 1/5;">Custom CSS</span>
 		<textarea
 			class="p-1 min-h-[10rem] font-mono"
